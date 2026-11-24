@@ -25,8 +25,7 @@ ponovo prave sve tabele i slike.
 | `data/raw/self_load/` | opterećujući tenant sam (samoopterećenje) | A0, A2, A4 | 50–450 kpps, uzak RPS |
 | `data/raw/cpu_budget/` | CPU vreme po paketu (CPU budžet) | A0, A1, A2 | jedan tok 64 B, 100–250 kpps, uzak RPS |
 
-Osnovni okvir je 64 B; gornja veličina okvira je 1400 B (blizu MTU-a od 1500 B, uz zaglavlja), a ne
-1500 B. Svako merenje traje 15 s posle 2 s zagrevanja, sa 10 ponavljanja po ćeliji i slučajnim
+Osnovni okvir je 64 B; gornja veličina okvira je 1400 B (blizu MTU-a od 1500 B, uz zaglavlja). Svako merenje traje 15 s posle 2 s zagrevanja, sa 10 ponavljanja po ćeliji i slučajnim
 redosledom intenziteta. Platforma: server AMD Ryzen 7 2700X, Ubuntu 24.04 (kernel 6.8), OVS 3.3.9,
 Netronome Agilio CX 2×10G (firmware `bpf`, bez ntuple filtera); generator Intel i3-9100F sa TRex v3.06
 (af_packet) i Mellanox ConnectX.
@@ -47,8 +46,6 @@ measurement/traffic-generator/  osnovni lab na generatoru (TRex kontejneri; lab.
 analysis/                    obrada, statistika, tabele i slike (01_ … 08_, run_all.sh)
 results/processed/           izvedeni CSV/JSON (po merenju, po ćeliji, statistički testovi)
 results/tables/, figures/    tabele (LaTeX) i slike iz rada
-mapping_old_to_new.csv       originalni naziv merenja -> nova putanja
-mapping_names.csv          originalni naziv skripte, tabele ili slike -> novi naziv
 ```
 
 Svako merenje je određeno svojom putanjom, npr.
@@ -75,40 +72,4 @@ bash analysis/run_all.sh
 | `07_loss_latency_tradeoff.py` | `table_loss_latency`: kompromis gubitka i latencije |
 | `08_paper_figures.py` | slike iz sekcije 5 rada: `k5_toplotna_mapa.pdf` (sl. 3), `k5_deljeno_jezgro.pdf` (sl. 4), `k5_okviri_tcp.pdf` (sl. 5), `k5_zakon_cena.pdf` (sl. 6) |
 
-Slike `overview_isporuka.pdf` i `overview_p50.pdf` su pregledne (sve ćelije i intenziteti) i nisu u radu.
 
-Statistika: Mann–Whitney test, Holmova korekcija, Cliff-ov δ, bootstrap intervali (`analysis/stats.py`). Testovi
-korišćeni u radu su u `rev_tests_vs_A0.csv` i `rev_tests_vs_P0.csv`; kolone `p_holm`, `ci_lo` i
-`ci_hi` u pomoćnom `interference_cells.csv` zavise od broja poređenja u porodici i od bootstrap uzorkovanja, pa
-nisu namenjene citiranju.
-
-## Rad
-
-Sam rad nije deo repozitorijuma. Slike iz sekcije 5 rada (`results/figures/k5_*.pdf`) i sve tabele
-(`results/tables/`) dobijaju se iz sirovih podataka skriptom `analysis/run_all.sh`.
-
-## Merne skripte
-
-Folder `measurement/` ima isti raspored kao laboratorija (`~/server-lab` na serveru,
-`~/traffic-generator` na generatoru), pa relativne putanje u skriptama važe bez izmena. Imena kartica,
-adrese i jezgra su u `lab.env` i `ns-ovs-isolation/ns.env`. Pristup generatoru i serveru zadaje se
-promenljivim okruženja `SRV_HOST`, `GEN_HOST` (npr. `user@10.0.0.2`), `SRV_HOSTNAME` i `SSH_KEY`.
-Osnovni lab se podiže redom `1 - Installation`, `2 - Setup Lab`, `3 - Start Lab`; TRex image se gradi iz
-arhive `v3.06.tar.gz` sa sajta TRex projekta, koja nije u repozitorijumu. Kampanje se pokreću na
-serveru: `orchestrator/run_campaign.sh` (interferencija u četiri ćelije, samoopterećenje, CPU budžet) i
-`orchestrator/run_campaign_frames_tcp.sh` (okviri, TCP, ćelija „širok RPS, različiti redovi“). Pojedinačne
-serije pokreću `run_interference.sh`, `run_self_load.sh` i `run_cpu_budget.sh`, a na generatoru
-`run_trex.sh flow` (`trex_flow.py`) i `trex_latency.py`. CPU vreme po OVS
-instanci meri `tools/ovs_instance_cpu.py` (eBPF kprobe/kretprobe na `ovs_vport_receive`).
-
-Merenja spore putanje nisu deo ovog repozitorijuma.
-
-## Nazivi i veza sa laboratorijom
-
-Folderi, fajlovi i skripte imaju opisne nazive (`interference_2x2`, `frame_size`, `tcp`, `self_load`,
-`cpu_budget`). Sadržaj sirovih fajlova nije menjan: polje `label` u `generator/tenantN.json` zadržava
-interno ime merenja koje je skripta upisala u trenutku merenja. Veza tog imena i putanje merenja je u
-`mapping_old_to_new.csv`, a veza ranijih i sadašnjih naziva skripti, indeksa, tabela i slika u
-`mapping_names.csv`. Merne skripte u `measurement/` se od verzija pokrenutih u laboratoriji razlikuju
-samo u nazivima fajlova i prefiksima imena merenja i u parametrizovanim adresama (`SRV_HOST`,
-`GEN_HOST`, `SSH_KEY`).
