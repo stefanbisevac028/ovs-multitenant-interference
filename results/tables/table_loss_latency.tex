@@ -1,0 +1,12 @@
+% generisano: analysis/07_loss_latency_tradeoff.py
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Var. & \makecell{Isporuka\\t2 / t3} & \makecell{p50 osnovno\\{}[ms]} & \makecell{p50 pri zasićenju\\{}[ms]} & \makecell{U roku $\leq$1~ms\\(osnovno $\rightarrow$ zasićenje)} & \makecell{p50 samog\\opterećujućeg [ms]} \\
+\midrule
+A0 & 0{,}85 / 0{,}90 & 0{,}28--0{,}30 & 16{,}5--17{,}6 & 0{,}54--0{,}69 $\rightarrow$ 0{,}00 & 0{,}15 \\
+A1 & 0{,}89 / 0{,}86 & 0{,}27--0{,}44 & 16{,}8--17{,}3 & 0{,}53--0{,}65 $\rightarrow$ 0{,}00 & -- \\
+A2 & 0{,}50 / 0{,}50 & 0{,}58--1{,}85 & 564--769 & 0{,}36--0{,}51 $\rightarrow$ 0{,}00 & 0{,}15 \\
+A3 & 0{,}50 / 0{,}51 & 0{,}55--1{,}84 & 743--835 & 0{,}36--0{,}54 $\rightarrow$ 0{,}00 & -- \\
+A4 & 0{,}99 / 1{,}03 & 0{,}45--0{,}70 & 4{,}4--5{,}0 & 0{,}54--0{,}62 $\rightarrow$ 0{,}14--0{,}15 & 0{,}76 \\
+\bottomrule
+\end{tabular}

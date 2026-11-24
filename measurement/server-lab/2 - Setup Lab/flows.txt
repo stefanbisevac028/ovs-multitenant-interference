@@ -1,0 +1,7 @@
+# OpenFlow pravila za sve OvS-ove u lab-u (tier0 br-tier0 i tier1 br0-1..3).
+# Bridge-ovi rade bez kontrolera (fail_mode=secure), pa propustaju samo ono sto je ovde.
+# Format: ovs-ofctl (jedno pravilo po liniji). NORMAL = obican L2 learning switch.
+# Agenti u OvS kontejnerima primenjuju izmene ovog fajla sami, za nekoliko sekundi.
+priority=100,arp,actions=NORMAL
+priority=50,ip,actions=NORMAL
+priority=0,actions=drop
